@@ -16,6 +16,7 @@ const HomePage = () => {
   return (
     <Layout>
       <Hero />
+      <About />
     </Layout>
   )
 }
