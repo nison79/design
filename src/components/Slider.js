@@ -3,11 +3,66 @@ import { graphql, useStaticQuery } from "gatsby"
 import Title from "./Title"
 import styled from "styled-components"
 import Image from "gatsby-image"
-import { FaQuoteRight } from "react-icons/fa"
+import { FaChevronLeft, FaQuoteRight } from "react-icons/fa"
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi"
 
+const query = graphql`
+  {
+    allAirtable(filter: {table: {eq: "Customers"}}) {
+      nodes {
+        data {
+          quote
+          name
+          title
+          image {
+            localFiles {
+              childImageSharp {
+                fixed(width:150,height:150) {
+                ...GatsbyImageSharpFixed
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 const Slider = () => {
-  return <h2>slider component</h2>
+  const {allAirtable:{nodes:customers}} = useStaticQuery(query)
+  const [index,setIndex] =React.useState(0);
+  //more logic
+  return (
+      <Wrapper className="section">
+          <Title title="reviews"/>
+          <div className="section-center">
+            {customers.map((customer , customerIndex) => {
+              const{data:{image,name,title,quote}} = customer
+              const customerImg = image.localFiles[0].childImageSharp.fixed
+
+              let position = 'nextSlide'
+              if(customerIndex === index ) {
+                position = 'activeSlide'
+              }
+
+              //more logic
+                return(
+                  <article className={position} key={customerIndex}>
+                    <Image fixed={customerImg} className="img" />
+                    <h4>{name}</h4>
+                    <p className="title">{title}</p>
+                    <p className="text">{quote}</p>
+                    <FaQuoteRight className="icon" />
+                  </article>
+                )
+            })}
+            <button className="prev" onClick={() => setIndex(index - 1)}>
+              <FaChevronLeft />
+            </button>
+          </div>
+      </Wrapper>
+  )
 }
 
 const Wrapper = styled.div`
