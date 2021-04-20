@@ -32,7 +32,15 @@ const query = graphql`
 const Slider = () => {
   const {allAirtable:{nodes:customers}} = useStaticQuery(query)
   const [index,setIndex] =React.useState(0);
-  //more logic
+  React.useEffect(() => {
+    const lastIndex = customers.length - 1 ;
+    if(index < 0 ) {
+      setIndex(lastIndex)
+    }
+    if(index > lastIndex) {
+      setIndex(0)
+    }
+  },[index,customers])
   return (
       <Wrapper className="section">
           <Title title="reviews"/>
@@ -45,8 +53,12 @@ const Slider = () => {
               if(customerIndex === index ) {
                 position = 'activeSlide'
               }
+              if(customerIndex === index -1 || (index === 0 && customerIndex === customers.length -1))
+              {
+                position = 'lastSlide'
+              }
 
-              //more logic
+              
                 return(
                   <article className={position} key={customerIndex}>
                     <Image fixed={customerImg} className="img" />
@@ -58,7 +70,10 @@ const Slider = () => {
                 )
             })}
             <button className="prev" onClick={() => setIndex(index - 1)}>
-              <FaChevronLeft />
+              <FiChevronLeft />
+            </button>
+            <button className="next" onClick={() => setIndex(index + 1)}>
+              <FiChevronRight />
             </button>
           </div>
       </Wrapper>
