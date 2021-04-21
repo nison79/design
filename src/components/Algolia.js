@@ -12,9 +12,18 @@ import {
   connectHits,
 } from "react-instantsearch-dom"
 
+const searcClient = algoliasearch(process.env.GATSBY_ALGOLIA_APP_ID,process.env.GATSBY_ALGOLIA_SEARCH_KEY)
+
 const Search = () => {
-  return <h2>algolia search</h2>
+  return <Wrapper><Title title="algolia Search" />
+    <InstantSearch indexName={process.env.GATSBY_ALGOLIA_INDEX_NAME} searchClient={searcClient}>
+      <SearchBox />
+      <Hits />
+    </InstantSearch>
+  </Wrapper>
 }
+
+
 
 const Wrapper = styled.section`
   padding: 5rem 0;
