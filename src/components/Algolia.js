@@ -14,11 +14,23 @@ import {
 
 const searcClient = algoliasearch(process.env.GATSBY_ALGOLIA_APP_ID,process.env.GATSBY_ALGOLIA_SEARCH_KEY)
 
+const NewHits = connectHits(({hits}) => {
+  return hits.map(item => {
+    const {objectID,image,name} = item
+    return <article key={objectID}>
+      <Image fluid={image} className="img" />
+      <h4>{name}</h4>
+    </article>
+  })
+})
+
 const Search = () => {
   return <Wrapper><Title title="algolia Search" />
     <InstantSearch indexName={process.env.GATSBY_ALGOLIA_INDEX_NAME} searchClient={searcClient}>
       <SearchBox />
-      <Hits />
+      <Container className="section-center">
+        <NewHits />
+      </Container>
     </InstantSearch>
   </Wrapper>
 }
